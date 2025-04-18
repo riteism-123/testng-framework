@@ -33,4 +33,53 @@ jobs:
         with:
             name: test-reports
             path: target/surefire-reports
+            
+    - name: Upload Extent HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: extent-report
+            path: test-output/ExtentReport.html
+            
+            
+    - name: Upload JAR (or anything else)
+        uses: actions/upload-artifact@v4
+        with:
+            name: my-artifacts
+            path: |
+                target/*.jar
+                test-output/ExtentReport.html
+                target/surefire-reports/  
 
+
+    - name: Send Microsoft Teams Notification (Success)
+        if: success()
+        run: |
+            curl -H 'Content-Type: application/json' \
+            -d '{"@type":"MessageCard","@context":"https://schema.org/extensions","summary":"Build Success","themeColor":"0076D7","title":"✅ Build Passed","text":"The GitHub Actions build for **${{ github.repository }}** succeeded on branch **${{ github.ref_name }}**."}' \
+            ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+    - name: Send Microsoft Teams Notification (Failure)
+        if: failure()
+        run: |
+            curl -H 'Content-Type: application/json' \
+            -d '{"@type":"MessageCard","@context":"https://schema.org/extensions","summary":"Build Failed","themeColor":"FF0000","title":"❌ Build Failed","text":"The GitHub Actions build for **${{ github.repository }}** failed on branch **${{ github.ref_name }}**."}' \
+            ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+  
+            
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: maven:3.9.4-eclipse-temurin-17
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Run Tests in Docker
+      run: mvn clean test
+      
+      
+      

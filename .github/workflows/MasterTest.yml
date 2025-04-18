@@ -1,0 +1,115 @@
+name: Java CI with Maven + TestNG + Teams Notifications
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+
+    - name: ☕ Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: 📦 Build with Maven
+      run: mvn clean test
+
+    - name: 📊 Capture test summary
+      id: test_summary
+      run: |
+        total=$(grep -oP '(?<=Tests run: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+        failures=$(grep -oP '(?<=Failures: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+        errors=$(grep -oP '(?<=Errors: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+        skipped=$(grep -oP '(?<=Skipped: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+        passed=$((total - failures - errors - skipped))
+        echo "total=$total" >> $GITHUB_OUTPUT
+        echo "passed=$passed" >> $GITHUB_OUTPUT
+        echo "failures=$failures" >> $GITHUB_OUTPUT
+        echo "errors=$errors" >> $GITHUB_OUTPUT
+        echo "skipped=$skipped" >> $GITHUB_OUTPUT
+
+    - name: 📤 Upload Test Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          target/surefire-reports
+          test-output/ExtentReport.html
+
+    - name: ✅ Notify Microsoft Teams on Success
+      if: success()
+      run: |
+        curl -H 'Content-Type: application/json' \
+        -d '{
+          "@type": "MessageCard",
+          "@context": "https://schema.org/extensions",
+          "summary": "Build Passed",
+          "themeColor": "0076D7",
+          "title": "✅ Build Passed: ${{ github.repository }}",
+          "sections": [{
+            "activityTitle": "**Branch:** `${{ github.ref_name }}`",
+            "facts": [
+              { "name": "Total Tests", "value": "${{ steps.test_summary.outputs.total }}" },
+              { "name": "Passed", "value": "${{ steps.test_summary.outputs.passed }}" },
+              { "name": "Failures", "value": "${{ steps.test_summary.outputs.failures }}" },
+              { "name": "Errors", "value": "${{ steps.test_summary.outputs.errors }}" },
+              { "name": "Skipped", "value": "${{ steps.test_summary.outputs.skipped }}" }
+            ],
+            "markdown": true
+          }],
+          "potentialAction": [{
+            "@type": "OpenUri",
+            "name": "🔍 View Build",
+            "targets": [{
+              "os": "default",
+              "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }]
+          }]
+        }' \
+        ${{ secrets.TEAMS_WEBHOOK_URL }}
+
+    - name: ❌ Notify Microsoft Teams on Failure
+      if: failure()
+      run: |
+        curl -H 'Content-Type: application/json' \
+        -d '{
+          "@type": "MessageCard",
+          "@context": "https://schema.org/extensions",
+          "summary": "Build Failed",
+          "themeColor": "FF0000",
+          "title": "❌ Build Failed: ${{ github.repository }}",
+          "sections": [{
+            "activityTitle": "**Branch:** `${{ github.ref_name }}`",
+            "facts": [
+              { "name": "Total Tests", "value": "${{ steps.test_summary.outputs.total }}" },
+              { "name": "Passed", "value": "${{ steps.test_summary.outputs.passed }}" },
+              { "name": "Failures", "value": "${{ steps.test_summary.outputs.failures }}" },
+              { "name": "Errors", "value": "${{ steps.test_summary.outputs.errors }}" },
+              { "name": "Skipped", "value": "${{ steps.test_summary.outputs.skipped }}" }
+            ],
+            "markdown": true
+          }],
+          "potentialAction": [{
+            "@type": "OpenUri",
+            "name": "🔍 View Build",
+            "targets": [{
+              "os": "default",
+              "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }]
+          }]
+        }' \
+        ${{ secrets.TEAMS_WEBHOOK_URL }}
