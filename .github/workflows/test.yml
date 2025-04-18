@@ -50,21 +50,5 @@ jobs:
                 target/*.jar
                 test-output/ExtentReport.html
                 target/surefire-reports/  
-
-  
-            
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: maven:3.9.4-eclipse-temurin-17
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Run Tests in Docker
-      run: mvn clean test
-      
       
       
