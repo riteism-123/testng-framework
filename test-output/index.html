@@ -7,7 +7,7 @@
 
     <link type="text/css" href="testng-reports1.css" rel="stylesheet" id="ultra" />
     <link type="text/css" href="testng-reports.css" rel="stylesheet" id="retro" disabled="false"/>
-    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="testng-reports.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type='text/javascript'>
@@ -21,7 +21,8 @@
      -->
   </head>
 
-  <body>    <div class="top-banner-root">
+  <body>
+    <div class="top-banner-root">
       <span class="top-banner-title-font">Test results</span>
       <button id="button" class="button">Switch Retro Theme</button> <!-- button -->
       <br/>
@@ -103,22 +104,22 @@
                     <div class="method-list-content passed suite-Sample_Suite">
                       <span>
                         <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user3, pass3)">loginTest(user3, pass3)</a> <!-- method navigator-link -->
-                      </span>
-                      <br/>
-                      <span>
-                        <img src="passed.png" width="3%"/>
                         <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest">loginTest</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                       <span>
                         <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user2, pass2)">loginTest(user2, pass2)</a> <!-- method navigator-link -->
+                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user1, pass1)">loginTest(user1, pass1)</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                       <span>
                         <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user1, pass1)">loginTest(user1, pass1)</a> <!-- method navigator-link -->
+                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user3, pass3)">loginTest(user3, pass3)</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Sample_Suite" title="com.example.tests.LoginTest" class="method navigator-link" hash-for-method="loginTest(user2, pass2)">loginTest(user2, pass2)</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Sample_Suite -->
@@ -141,14 +142,6 @@
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="loginTest(user3, pass3)">
-                  </a> <!-- loginTest(user3, pass3) -->
-                  <span class="method-name">loginTest</span>
-                  <span class="parameters">(user3,pass3)</span>
-                </div> <!-- method-content -->
-              </div> <!-- method -->
-              <div class="method">
-                <div class="method-content">
                   <a name="loginTest">
                   </a> <!-- loginTest -->
                   <span class="method-name">loginTest</span>
@@ -156,18 +149,26 @@
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
-                  <a name="loginTest(user2, pass2)">
-                  </a> <!-- loginTest(user2, pass2) -->
+                  <a name="loginTest(user1, pass1)">
+                  </a> <!-- loginTest(user1, pass1) -->
                   <span class="method-name">loginTest</span>
-                  <span class="parameters">(user2,pass2)</span>
+                  <span class="parameters">(user1, pass1)</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
-                  <a name="loginTest(user1, pass1)">
-                  </a> <!-- loginTest(user1, pass1) -->
+                  <a name="loginTest(user3, pass3)">
+                  </a> <!-- loginTest(user3, pass3) -->
                   <span class="method-name">loginTest</span>
-                  <span class="parameters">(user1,pass1)</span>
+                  <span class="parameters">(user3, pass3)</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="loginTest(user2, pass2)">
+                  </a> <!-- loginTest(user2, pass2) -->
+                  <span class="method-name">loginTest</span>
+                  <span class="parameters">(user2, pass2)</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -182,6 +183,9 @@
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;!DOCTYPE suite SYSTEM &quot;https://testng.org/testng-1.0.dtd&quot;&gt;
 &lt;suite name=&quot;Sample Suite&quot; guice-stage=&quot;DEVELOPMENT&quot;&gt;
+  &lt;listeners&gt;
+    &lt;listener class-name=&quot;com.example.utils.TestListener&quot;/&gt;
+  &lt;/listeners&gt;
   &lt;test thread-count=&quot;5&quot; name=&quot;Sample Test&quot;&gt;
     &lt;classes&gt;
       &lt;class name=&quot;com.example.tests.BaseTest&quot;/&gt;
@@ -229,24 +233,24 @@ data.addRows(4);
 data.setCell(0, 0, 0)
 data.setCell(0, 1, 'loginTest')
 data.setCell(0, 2, 'com.example.tests.LoginTest')
-data.setCell(0, 3, 20);
+data.setCell(0, 3, 29);
 data.setCell(1, 0, 1)
 data.setCell(1, 1, 'loginTest')
 data.setCell(1, 2, 'com.example.tests.LoginTest')
-data.setCell(1, 3, 9);
+data.setCell(1, 3, 18);
 data.setCell(2, 0, 2)
 data.setCell(2, 1, 'loginTest')
 data.setCell(2, 2, 'com.example.tests.LoginTest')
-data.setCell(2, 3, 4);
+data.setCell(2, 3, 6);
 data.setCell(3, 0, 3)
 data.setCell(3, 1, 'loginTest')
 data.setCell(3, 2, 'com.example.tests.LoginTest')
-data.setCell(3, 3, 2);
+data.setCell(3, 3, 5);
 window.suiteTableData['Sample_Suite']= { tableData: data, tableDiv: 'times-div-Sample_Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 35 ms</span>
+              <span class="suite-total-time">Total running time: 58 ms</span>
               <div id="times-div-Sample_Suite">
               </div> <!-- times-div-Sample_Suite -->
             </div> <!-- times-div -->
@@ -267,9 +271,9 @@ return data;
             <div class="ignored-class-div">
               <span class="ignored-class-name">com.example.tests.LoginTest</span>
               <div class="ignored-methods-div">
-                <span class="ignored-method-name">tearDownReport</span>
-                <br/>
                 <span class="ignored-method-name">setupReport</span>
+                <br/>
+                <span class="ignored-method-name">tearDownReport</span>
                 <br/>
               </div> <!-- ignored-methods-div -->
             </div> <!-- ignored-class-div -->
@@ -291,26 +295,26 @@ return data;
               <div class="chronological-class-name">com.example.tests.LoginTest</div> <!-- chronological-class-name -->
               <div class="test-method">
                 <span class="method-name">loginTest</span>
-                <span class="method-start">450 ms</span>
+                <span class="method-start">394 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <span class="method-name">loginTest(user1, pass1)</span>
-                <span class="method-start">1529 ms</span>
+                <span class="method-start">1564 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <span class="method-name">loginTest(user2, pass2)</span>
-                <span class="method-start">1538 ms</span>
+                <span class="method-start">1578 ms</span>
               </div> <!-- test-method -->
               <div class="test-method">
                 <span class="method-name">loginTest(user3, pass3)</span>
-                <span class="method-start">1553 ms</span>
+                <span class="method-start">1595 ms</span>
               </div> <!-- test-method -->
             </div> <!-- chronological-class -->
             <div class="chronological-class">
               <div class="chronological-class-name">com.example.tests.BaseTest</div> <!-- chronological-class-name -->
               <div class="configuration-suite after">
                 <span class="method-name">tearDownReport</span>
-                <span class="method-start">1599 ms</span>
+                <span class="method-start">1658 ms</span>
               </div> <!-- configuration-suite after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
