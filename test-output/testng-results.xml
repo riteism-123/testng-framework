@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="3" passed="3" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-04-18T10:04:02 IST" name="Default suite" finished-at="2025-04-18T10:04:03 IST" duration-ms="1269">
+    <groups>
+    </groups>
+    <test started-at="2025-04-18T10:04:02 IST" name="Default test" finished-at="2025-04-18T10:04:03 IST" duration-ms="1269">
+      <class name="com.example.tests.LoginTest">
+        <test-method signature="loginTest(java.lang.String,java.lang.String)[pri:0, instance:com.example.tests.LoginTest@313ac989]" started-at="2025-04-18T10:04:03 IST" name="loginTest" data-provider="excelData" finished-at="2025-04-18T10:04:03 IST" duration-ms="15" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[user1]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[pass1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- loginTest -->
+        <test-method signature="loginTest(java.lang.String,java.lang.String)[pri:0, instance:com.example.tests.LoginTest@313ac989]" started-at="2025-04-18T10:04:03 IST" name="loginTest" data-provider="excelData" finished-at="2025-04-18T10:04:03 IST" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[user2]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[pass2]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- loginTest -->
+        <test-method signature="loginTest(java.lang.String,java.lang.String)[pri:0, instance:com.example.tests.LoginTest@313ac989]" started-at="2025-04-18T10:04:03 IST" name="loginTest" data-provider="excelData" finished-at="2025-04-18T10:04:03 IST" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[user3]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[pass3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- loginTest -->
+      </class> <!-- com.example.tests.LoginTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
