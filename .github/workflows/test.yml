@@ -6,17 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
     
-  schedule:
-    # Every 2 hours
-    - cron: '0 */2 * * *'
-    
-    # Every day at 9 AM UTC
-    # - cron: '0 9 * * *'
-    
-    
-    
-
-  workflow_dispatch:  # Optional: allows manual trigger
 
 jobs:
   build-test:
@@ -67,26 +56,3 @@ jobs:
         path: logs/test-execution.log
           
           
-    - name: Send Email Notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.GMAIL_USERNAME }}
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: >
-            ${{ job.status == 'success' && '✅' || '❌' }} [GitHub CI] Tests ${{ job.status }}: ${{ github.repository }} @ ${{ github.ref_name }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: GitHub Actions <${{ secrets.GMAIL_USERNAME }}>
-          body: |
-            GitHub CI for ${{ github.repository }} - ${{ github.ref_name }}
-
-            Status: ${{ job.status }}
-            Trigger: ${{ github.event_name }}
-            Commit: ${{ github.sha }}
-            Link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            ✅ Tests ran. View full report in the actions tab.
-
-   
