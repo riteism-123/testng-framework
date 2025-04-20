@@ -1,6 +1,5 @@
 name: Java Selenium Test
 
-# Trigger the workflow on push or pull request to the main branch
 on:
   push:
     branches:
@@ -33,11 +32,6 @@ jobs:
     - name: Install dependencies
       run: mvn install -DskipTests=true  # Install Maven dependencies
 
-    - name: Set up ChromeDriver
-      uses: actions/virtual-environments@v1
-      with:
-        image: 'ubuntu-latest'
-
     - name: Install Google Chrome
       run: |
         sudo apt update
@@ -63,4 +57,3 @@ jobs:
       with:
         name: test-results
         path: target/surefire-reports  # This path assumes you're using Maven Surefire plugin for test reports
-
