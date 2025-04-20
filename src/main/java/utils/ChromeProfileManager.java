@@ -28,7 +28,7 @@ public class ChromeProfileManager {
         // Create a unique directory for each test run to avoid conflicts
         String uniqueUserDataDir = userDataDir + "_" + UUID.randomUUID().toString();
 
-        //options.addArguments("user-data-dir=" + uniqueUserDataDir); // Unique directory for each session
+        options.addArguments("user-data-dir=" + uniqueUserDataDir); // Unique directory for each session
         options.addArguments("profile-directory=" + profileName);
 
         // Disable detection
@@ -50,4 +50,43 @@ public class ChromeProfileManager {
 
         return new ChromeDriver(options);
     }
+    
+        public static ChromeOptions getOptionsForCI() {
+            ChromeOptions options = new ChromeOptions();
+
+            // Required for CI (random temp profile)
+            String tmpProfilePath = System.getProperty("java.io.tmpdir") + "/chrome-profile-" + UUID.randomUUID();
+            options.addArguments("--user-data-dir=" + tmpProfilePath);
+            
+            boolean isCI = System.getenv("CI") != null;
+
+            if (isCI) {
+                // Use temp profile (as above)
+            } else {
+                // Use local user-data-dir
+                options.addArguments("--user-data-dir=C:/Users/R M/ChromeProfile");
+            }
+            
+            
+
+            options.addArguments("--disable-blink-features=AutomationControlled");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--headless=new"); // headless mode for CI
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1920,1080");
+
+            options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+            options.setExperimentalOption("useAutomationExtension", false);
+
+            // Disable password save prompts
+            options.setExperimentalOption("prefs", java.util.Map.of(
+                "credentials_enable_service", false,
+                "profile.password_manager_enabled", false
+            ));
+
+            return options;
+        }
+
+
 }

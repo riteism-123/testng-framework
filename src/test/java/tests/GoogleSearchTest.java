@@ -25,7 +25,9 @@ public class GoogleSearchTest {
     	WebDriverManager.chromedriver().setup();
 
         // Use Chrome with a unique profile directory for each test
-        driver = ChromeProfileManager.getDriverWithProfile("Default", false);
+        //driver = ChromeProfileManager.getDriverWithProfile("Default", false);
+    	driver = new ChromeDriver(ChromeProfileManager.getOptionsForCI());
+       
 
         driver.manage().window().maximize();
         google = new GoogleHomePage(driver);
