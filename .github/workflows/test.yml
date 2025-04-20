@@ -1,62 +1,64 @@
 name: Java CI with Maven + TestNG + Teams Notifications
 
 on:
-    push:
-        branches: [ "main" ]
-    pull_request:
-        branches: [ "main" ]
-    schedule:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
     # Every 2 hours
-        - cron: '0 */2 * * *'
-    
-    # Every day at 9 AM UTC
+    - cron: '0 */2 * * *'
+    # Example daily trigger (commented)
     # - cron: '0 9 * * *'
-    
-    workflow_dispatch:  # Optional: allows manual trigger
+  workflow_dispatch:
 
 jobs:
-    build-test:
-        name: Build and Test
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                shell: bash
-        steps:
-            - name: 📥 Checkout code
-            uses: actions/checkout@v3
+  build-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
-            - name: ☕ Set up Java 17
-            uses: actions/setup-java@v3
-            with:
-                distribution: 'temurin'
-                java-version: '17'
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-            - name: 📦 Build with Maven
-            run: mvn clean test
+      - name: ☕ Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-            - name: 📊 Capture test summary
-            id: test_summary
-            run: |
-                total=$(grep -oP '(?<=Tests run: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-                failures=$(grep -oP '(?<=Failures: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-                errors=$(grep -oP '(?<=Errors: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-                skipped=$(grep -oP '(?<=Skipped: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-                passed=$((total - failures - errors - skipped))
-                echo "total=$total" >> $GITHUB_OUTPUT
-                echo "passed=$passed" >> $GITHUB_OUTPUT
-                echo "failures=$failures" >> $GITHUB_OUTPUT
-                echo "errors=$errors" >> $GITHUB_OUTPUT
-                echo "skipped=$skipped" >> $GITHUB_OUTPUT
+      - name: 📦 Build with Maven
+        run: mvn clean test
 
-            - name: 📤 Upload Test Reports And Logs
-            if: always()
-            uses: actions/upload-artifact@v4
-            with:
-            name: test-reports
-            path: |
-                target/surefire-reports
-                test-output/ExtentReport.html
-          
-            with:
-            name: test-logs
-            path: logs/test-execution.log
+      - name: 📊 Capture test summary
+        id: test_summary
+        run: |
+          total=$(grep -oP '(?<=Tests run: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+          failures=$(grep -oP '(?<=Failures: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+          errors=$(grep -oP '(?<=Errors: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+          skipped=$(grep -oP '(?<=Skipped: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+          passed=$((total - failures - errors - skipped))
+          echo "total=$total" >> $GITHUB_OUTPUT
+          echo "passed=$passed" >> $GITHUB_OUTPUT
+          echo "failures=$failures" >> $GITHUB_OUTPUT
+          echo "errors=$errors" >> $GITHUB_OUTPUT
+          echo "skipped=$skipped" >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports
+            test-output/ExtentReport.html
+
+      - name: 📤 Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: logs/test-execution.log
