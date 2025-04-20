@@ -24,15 +24,15 @@
 </build>
 
   
-  <dependencies>
+<dependencies>
     <!-- TestNG -->
-    <dependency>
-        <groupId>org.testng</groupId>
-        <artifactId>testng</artifactId>
-        <version>7.9.0</version>
-        <scope>test</scope>
-    </dependency>
-    
+<dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.9.0</version>
+    <scope>compile</scope> <!-- Use 'compile' if you're using TestNG in main code -->
+</dependency>
+
     
     <!-- Apache POI for Excel (XLS and XLSX) -->
 <dependency>
@@ -60,7 +60,6 @@
     <artifactId>xmlbeans</artifactId>
     <version>5.1.1</version>
 </dependency>
-
 
 <dependency>
     <groupId>com.aventstack</groupId>
@@ -94,12 +93,8 @@
     <artifactId>jackson-databind</artifactId>
     <version>2.15.3</version>
 </dependency>
-
-
-
     
 </dependencies>
-
   
   
 </project>
