@@ -1,91 +1,62 @@
 name: Java CI with Maven + TestNG + Teams Notifications
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+    schedule:
     # Every 2 hours
-    - cron: '0 */2 * * *'
+        - cron: '0 */2 * * *'
     
     # Every day at 9 AM UTC
     # - cron: '0 9 * * *'
     
-    
-    
-
-  workflow_dispatch:  # Optional: allows manual trigger
+    workflow_dispatch:  # Optional: allows manual trigger
 
 jobs:
-  build-test:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
+    build-test:
+        name: Build and Test
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash
+        steps:
+            - name: 📥 Checkout code
+            uses: actions/checkout@v3
 
-    steps:
-    - name: 📥 Checkout code
-      uses: actions/checkout@v3
+            - name: ☕ Set up Java 17
+            uses: actions/setup-java@v3
+            with:
+                distribution: 'temurin'
+                java-version: '17'
 
-    - name: ☕ Set up Java 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+            - name: 📦 Build with Maven
+            run: mvn clean test
 
-    - name: 📦 Build with Maven
-      run: mvn clean test
+            - name: 📊 Capture test summary
+            id: test_summary
+            run: |
+                total=$(grep -oP '(?<=Tests run: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+                failures=$(grep -oP '(?<=Failures: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+                errors=$(grep -oP '(?<=Errors: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+                skipped=$(grep -oP '(?<=Skipped: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
+                passed=$((total - failures - errors - skipped))
+                echo "total=$total" >> $GITHUB_OUTPUT
+                echo "passed=$passed" >> $GITHUB_OUTPUT
+                echo "failures=$failures" >> $GITHUB_OUTPUT
+                echo "errors=$errors" >> $GITHUB_OUTPUT
+                echo "skipped=$skipped" >> $GITHUB_OUTPUT
 
-    - name: 📊 Capture test summary
-      id: test_summary
-      run: |
-        total=$(grep -oP '(?<=Tests run: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-        failures=$(grep -oP '(?<=Failures: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-        errors=$(grep -oP '(?<=Errors: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-        skipped=$(grep -oP '(?<=Skipped: )\d+' target/surefire-reports/*.txt | paste -sd+ - | bc)
-        passed=$((total - failures - errors - skipped))
-        echo "total=$total" >> $GITHUB_OUTPUT
-        echo "passed=$passed" >> $GITHUB_OUTPUT
-        echo "failures=$failures" >> $GITHUB_OUTPUT
-        echo "errors=$errors" >> $GITHUB_OUTPUT
-        echo "skipped=$skipped" >> $GITHUB_OUTPUT
-
-    - name: 📤 Upload Test Reports And Logs
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-reports
-        path: |
-          target/surefire-reports
-          test-output/ExtentReport.html
+            - name: 📤 Upload Test Reports And Logs
+            if: always()
+            uses: actions/upload-artifact@v4
+            with:
+            name: test-reports
+            path: |
+                target/surefire-reports
+                test-output/ExtentReport.html
           
-     with:
-        name: test-logs
-        path: logs/test-execution.log
-          
-          
-    - name: Send Email Notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.GMAIL_USERNAME }}
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: >
-            ${{ job.status == 'success' && '✅' || '❌' }} [GitHub CI] Tests ${{ job.status }}: ${{ github.repository }} @ ${{ github.ref_name }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: GitHub Actions <${{ secrets.GMAIL_USERNAME }}>
-          body: |
-            GitHub CI for ${{ github.repository }} - ${{ github.ref_name }}
-
-            Status: ${{ job.status }}
-            Trigger: ${{ github.event_name }}
-            Commit: ${{ github.sha }}
-            Link: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            ✅ Tests ran. View full report in the actions tab.
-
-   
+            with:
+            name: test-logs
+            path: logs/test-execution.log
