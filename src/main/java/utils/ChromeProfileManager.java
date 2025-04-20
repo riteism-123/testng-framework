@@ -28,7 +28,7 @@ public class ChromeProfileManager {
         // Create a unique directory for each test run to avoid conflicts
         String uniqueUserDataDir = userDataDir + "_" + UUID.randomUUID().toString();
 
-        options.addArguments("user-data-dir=" + uniqueUserDataDir); // Unique directory for each session
+        //options.addArguments("user-data-dir=" + uniqueUserDataDir); // Unique directory for each session
         options.addArguments("profile-directory=" + profileName);
 
         // Disable detection
