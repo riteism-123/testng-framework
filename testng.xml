@@ -9,7 +9,7 @@
     
 
         <classes>
-            <class name="com.example.tests.BaseTest"/>
+           
               <class name="com.example.tests.LoginTest"/>
              
         </classes>

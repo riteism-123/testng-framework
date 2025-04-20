@@ -18,7 +18,7 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        logger.info("✅ Test Passed: " + result.getName());
+        logger.info("✅ Test Passed Ritesh: " + result.getName());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onStart(ITestContext context) {
-        logger.info("=== Test Suite Started: " + context.getName() + " ===");
+        logger.info("=== Test Suite Started Ritesh: " + context.getName() + " ===");
     }
 
     @Override
