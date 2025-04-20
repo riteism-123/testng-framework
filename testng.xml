@@ -11,6 +11,8 @@
         <classes>
            
               <class name="com.example.tests.LoginTest"/>
+              <class name="tests.GoogleSearchTest"/>
+              
              
         </classes>
     </test>
