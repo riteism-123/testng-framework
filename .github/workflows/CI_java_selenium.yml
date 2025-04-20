@@ -1,0 +1,66 @@
+name: Java Selenium Test
+
+# Trigger the workflow on push or pull request to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # Checkout the code from GitHub
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'  # Specify the Java version for the project
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository  # Caching Maven dependencies to speed up future builds
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Install dependencies
+      run: mvn install -DskipTests=true  # Install Maven dependencies
+
+    - name: Set up ChromeDriver
+      uses: actions/virtual-environments@v1
+      with:
+        image: 'ubuntu-latest'
+
+    - name: Install Google Chrome
+      run: |
+        sudo apt update
+        sudo apt install -y wget
+        sudo apt install -y curl
+        sudo apt install -y unzip
+        sudo apt install -y chromium-browser  # Install Chromium browser for Selenium to run
+
+    - name: Install ChromeDriver
+      run: |
+        CHROME_DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+        wget https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver  # Set correct permissions for chromedriver
+
+    - name: Run tests with Maven
+      run: mvn test  # Run the tests
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: target/surefire-reports  # This path assumes you're using Maven Surefire plugin for test reports
+

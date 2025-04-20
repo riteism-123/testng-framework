@@ -16,6 +16,7 @@ jobs:
   build-test:
     name: Build and Test
     runs-on: ubuntu-latest
+    if: false  # This will prevent the 'build' job from running
     defaults:
       run:
         shell: bash
